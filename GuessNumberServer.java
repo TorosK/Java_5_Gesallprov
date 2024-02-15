@@ -8,32 +8,49 @@ public class GuessNumberServer {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server is listening on port " + port);
             
-            try (Socket clientSocket = serverSocket.accept();
-                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-                
-                System.out.println("Client connected");
-                
-                // Send a welcome message to the client
-                out.println("Welcome to the Guess the Number game!\nPlease input your guessed number and press ENTER.");
-                
-                Random random = new Random();
-                int number = random.nextInt(100) + 1; // Generate random number between 1-100
-                
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    int guess = Integer.parseInt(inputLine);
-                    if (guess == number) {
-                        out.println("Correct!");
-                        break;
-                    } else if (guess < number) {
-                        out.println("Higher");
-                    } else {
-                        out.println("Lower");
+            while (true) { // Server loop to allow multiple games
+                try (Socket clientSocket = serverSocket.accept();
+                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                    
+                    System.out.println("Client connected");
+                    out.println("Welcome to the Guess the Number game!\nPlease input your guessed number from 0 to 10 and press ENTER.");
+                    
+                    Random random = new Random();
+                    int number = random.nextInt(11); // Generate random number between 0-10
+                    
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        if ("exit".equalsIgnoreCase(inputLine.trim())) {
+                            break; // Exit the loop if the client wants to end the game
+                        }
+
+                        int guess = Integer.parseInt(inputLine);
+                        if (guess == number) {
+// When the guess is correct
+out.println("Correct!\n" +
+            "       ___________\n" +
+            "      '._==_==_=_.'\n" +
+            "      .-\\:      /-.\n" +
+            "     | (|:.     |) |\n" +
+            "      '-|:.     |-'\n" +
+            "        \\::.    /\n" +
+            "         '::. .'\n" +
+            "           ) (\n" +
+            "         _.' '._\n" +
+            "        `\"\"\"\"\"\"\"`\n" +
+            "You won! Enter 'exit' to leave or press ENTER to play again.");
+
+                            number = random.nextInt(11); // Generate a new number for the next round
+                        } else if (guess < number) {
+                            out.println("Higher");
+                        } else {
+                            out.println("Lower");
+                        }
                     }
                 }
+                System.out.println("Client disconnected. Waiting for a new connection...");
             }
-            System.out.println("Client disconnected");
         }
     }
 }
