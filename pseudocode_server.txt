@@ -1,0 +1,17 @@
+// Server
+Initialize server on a specified port
+Wait for client connection
+
+Generate a random number between 1 and 100
+While true
+    Wait for guess from client
+    If guess is equal to the number
+        Send "Correct!" to client
+        Break loop
+    Else if guess is lower than the number
+        Send "Higher" to client
+    Else
+        Send "Lower" to client
+
+Close client connection
+Shut down server

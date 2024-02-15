@@ -1,0 +1,13 @@
+// Client
+Connect to server on the specified port
+
+While true
+    Send guess to server
+    Receive response from server
+    If response is "Correct!"
+        Print "You guessed the number!"
+        Exit loop
+    Else
+        Print response ("Higher" or "Lower")
+
+Close connection
