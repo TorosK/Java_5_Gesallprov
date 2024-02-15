@@ -28,6 +28,7 @@ public class GuessNumberServer {
                         int guess = Integer.parseInt(inputLine);
                         if (guess == number) {
 // When the guess is correct
+// Server-side: After sending the win message and trophy
 out.println("Correct!\n" +
             "       ___________\n" +
             "      '._==_==_=_.'\n" +
@@ -41,7 +42,9 @@ out.println("Correct!\n" +
             "        `\"\"\"\"\"\"\"`\n" +
             "You won! Enter 'exit' to leave or press ENTER to play again.");
 
-                            number = random.nextInt(11); // Generate a new number for the next round
+// Reset the game for a new round
+number = random.nextInt(11); // Generate a new target number for the next game
+
                         } else if (guess < number) {
                             out.println("Higher");
                         } else {
