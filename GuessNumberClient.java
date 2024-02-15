@@ -11,10 +11,14 @@ public class GuessNumberClient {
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))) {
             
+            // Receive and print the welcome message from the server
+            String serverMessage = in.readLine();
+            System.out.println(serverMessage); // Print the welcome message
+            
             String userInput;
             while ((userInput = stdIn.readLine()) != null) {
-                out.println(userInput);
-                System.out.println("Server says: " + in.readLine());
+                out.println(userInput); // Send the guessed number to the server
+                System.out.println("Server says: " + in.readLine()); // Print server's response
             }
         }
     }

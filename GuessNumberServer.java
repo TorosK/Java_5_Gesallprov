@@ -13,6 +13,10 @@ public class GuessNumberServer {
                  BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
                 
                 System.out.println("Client connected");
+                
+                // Send a welcome message to the client
+                out.println("Welcome to the Guess the Number game!\nPlease input your guessed number and press ENTER.");
+                
                 Random random = new Random();
                 int number = random.nextInt(100) + 1; // Generate random number between 1-100
                 
