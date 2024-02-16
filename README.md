@@ -1,6 +1,7 @@
 Console command to compile all java files in a directory:
 
 javac *.java
+___
 
 For javadoc execution into 'doc' folder:
 
@@ -8,25 +9,31 @@ javadoc -d doc *.java
 
 ___
 
-run program by opening terminal in project directory and adapt to your individual credentials:
+run program by opening terminal in project directory and execute:
 
-Usage: java EmailSender <host> <port> <username> <password> <to> <subject> <message>
+java Guess_Number_Server
 
-Example 1:
+and from another terminal:
 
-java EmailSender smtp.example.com 465 myusername mypassword recipient@example.com "Test Subject" "This is a test message."
-
-Example 2:
-
-java EmailSender smtp.gmail.com 465 dittanvändarnamn@gmail.com dittlösenord mottagare@example.com "Test Subject" "This is a test message."
+java Guess_Number_Client
 ___
 
 To create a runnable .jar file:
 
-jar cmf manifest.txt EmailSender_Toros.jar com javax *.class META-INF
+jar cmf manifest.txt Guess_Number_Toros.jar *.class
 
 ___
 
 To run .jar file:
 
-java -jar EmailSender_Toros.jar
+java -jar Guess_Number_Toros.jar
+
+___
+
+Credit for ASCII Art goes to:
+
+Question Mark:
+D. Hopwood - https://ascii.co.uk/art/questionmark
+
+Trophy:
+jgs - https://ascii.co.uk/art/trophy

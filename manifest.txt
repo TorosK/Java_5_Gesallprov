@@ -1,2 +1,2 @@
-Main-Class: GuessNumberMain
+Main-Class: Guess_Number_Server
 
