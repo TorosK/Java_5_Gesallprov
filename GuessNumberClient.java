@@ -40,7 +40,6 @@ public class GuessNumberClient {
 
                 if (serverResponse.toString().contains("play again")) {
 // Client-side: After receiving the win message
-System.out.print("Press ENTER or input a number to play again or type 'exit' to leave: ");
 String decision = stdIn.readLine();
 if ("exit".equalsIgnoreCase(decision.trim())) {
     out.println("exit"); // Inform the server the client is exiting

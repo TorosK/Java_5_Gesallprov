@@ -19,12 +19,11 @@ public class GuessNumberServer {
                     System.out.println("Client connected from " + clientSocket.getRemoteSocketAddress());
 
                     // Include server and connection details in the welcome message
-                    String welcomeMessage = "\nWelcome to the Guess the Number game!\n\n" +
-                            "Server Host: " + serverSocket.getInetAddress().getHostName() + "\n" +
+                    String welcomeMessage = "\nServer Host: " + serverSocket.getInetAddress().getHostName() + "\n" +
                             "Server IP: " + InetAddress.getLocalHost().getHostAddress() + "\n" +
                             "Server Port: " + serverSocket.getLocalPort() + "\n" +
                             "Connected to: " + clientSocket.getLocalAddress().getHostAddress() + "\n\n" +
-"\n" +
+                            "Welcome to the 'Guess the Number' Game!\n\n" +
 "            ________\n" + 
 "        _jgN########Ngg_\n" + 
 "      _N##N@@\"\"  \"\"9NN##Np_\n" + 
@@ -72,7 +71,7 @@ out.println("Correct!\n" +
             "           ) (\n" +
             "         _.' '._\n" +
             "        `\"\"\"\"\"\"\"`\n" +
-            "You won! Enter 'exit' to leave or press ENTER to play again.");
+            "You won! Enter 'exit' to leave or press ENTER to play again:");
 
 // Reset the game for a new round
 number = random.nextInt(11); // Generate a new target number for the next game
