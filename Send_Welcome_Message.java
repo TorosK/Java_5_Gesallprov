@@ -10,8 +10,7 @@ public class Send_Welcome_Message {
                 "Connected from IP: " + clientSocket.getInetAddress().getHostAddress() + "\n" + 
                 "Connected from Port: " + clientSocket.getPort() + "\n\n" +
                 "Welcome to the 'Guess the Number' Game!\n\n" +
-                questionMarkArt +
-                "Please input your guessed number from 0 to 10 and press ENTER.";
+                questionMarkArt;                
         out.println(welcomeMessage);
     }
 }

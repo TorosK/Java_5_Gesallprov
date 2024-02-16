@@ -37,42 +37,46 @@ public class Guess_Number_Server {
     }
 
     private static boolean handleClientGuesses(BufferedReader in, PrintWriter out, Random random) throws IOException {
-        while (true) { // Outer loop for handling multiple game sessions
+        boolean newGame = true; // Flag to indicate the start of a new game
+    
+        while (true) { // Loop for handling multiple game sessions
             int number = random.nextInt(11); // Generate a new random number for each game session
     
-            String inputLine;
-            boolean gameWon = false;
-            while ((inputLine = in.readLine()) != null && !gameWon) { // Inner loop for handling guesses within a game session
-                if ("exit".equalsIgnoreCase(inputLine.trim())) {
-                    return false; // Exit the game if the client wants to end
-                }
+            if (newGame) {
+                out.println("New game started. \"Please input your guessed number from 0 to 10 and press ENTER"); // Inform the client that a new game has started
+                newGame = false; // Reset the flag after the message is sent
+            }
     
+            String inputLine = in.readLine(); // Read the client's guess
+            if (inputLine == null) break; // Break out of the loop if the connection is lost
+    
+            if ("exit".equalsIgnoreCase(inputLine.trim())) {
+                return false; // Exit the game if the client wants to end
+            }
+    
+            try {
                 int guess = Integer.parseInt(inputLine);
                 if (guess == number) {
                     String trophyArt = AsciiArtReader.readAsciiArt("ASCII_Art_Trophy.txt");
                     out.println("Correct!\n" + trophyArt +
                             "END OF GAME!\n" +
                             "You won! Enter 'exit' to leave or press ENTER to play again:");
-                    
-                    inputLine = in.readLine(); // Read the client's decision to exit or play again
+    
+                    inputLine = in.readLine(); // Wait for the client's decision to exit or play again
                     if ("exit".equalsIgnoreCase(inputLine.trim())) {
                         return false; // End the game if the player chooses to exit
-                    } else if (inputLine.trim().isEmpty()) {
-                        gameWon = true; // Set flag to exit the inner loop and start a new game session
                     }
+                    newGame = true; // Set flag for new game if the client chooses to continue
                 } else if (guess < number) {
                     out.println("Higher");
                 } else {
                     out.println("Lower");
                 }
+            } catch (NumberFormatException e) {
+                out.println("Invalid input. Please guess a number from 0 to 10.");
             }
-    
-            if (!gameWon) {
-                // If we reach this point without the game being won (e.g., client disconnected),
-                // we exit the method to allow the server to wait for a new connection.
-                return true;
-            }
-            // A new game session will start with a new random number due to the outer loop
         }
+    
+        return true; // Default to continue the game if the loop exits normally
     }    
 }
