@@ -37,35 +37,42 @@ public class Guess_Number_Server {
     }
 
     private static boolean handleClientGuesses(BufferedReader in, PrintWriter out, Random random) throws IOException {
-        int number = random.nextInt(11); // Generate a new random number for each game session
-
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            if ("exit".equalsIgnoreCase(inputLine.trim())) {
-                return false; // Exit the game if the client wants to end
-            }
-
-            int guess = Integer.parseInt(inputLine);
-            if (guess == number) {
-                String trophyArt = AsciiArtReader.readAsciiArt("ASCII_Art_Trophy.txt");
-                out.println("Correct!\n" + trophyArt +
-                        "END OF GAME!\n" +
-                        "You won! Enter 'exit' to leave or press ENTER to play again:");
-                
-                inputLine = in.readLine();
+        while (true) { // Outer loop for handling multiple game sessions
+            int number = random.nextInt(11); // Generate a new random number for each game session
+    
+            String inputLine;
+            boolean gameWon = false;
+            while ((inputLine = in.readLine()) != null && !gameWon) { // Inner loop for handling guesses within a game session
                 if ("exit".equalsIgnoreCase(inputLine.trim())) {
-                    return false; // End the game if the player chooses to exit
-                } else if (inputLine.trim().isEmpty()) {
-                    // Generate a new random number for the next game session
-                    number = random.nextInt(11);
-                    continue; // Start a new game session
+                    return false; // Exit the game if the client wants to end
                 }
-            } else if (guess < number) {
-                out.println("Higher");
-            } else {
-                out.println("Lower");
+    
+                int guess = Integer.parseInt(inputLine);
+                if (guess == number) {
+                    String trophyArt = AsciiArtReader.readAsciiArt("ASCII_Art_Trophy.txt");
+                    out.println("Correct!\n" + trophyArt +
+                            "END OF GAME!\n" +
+                            "You won! Enter 'exit' to leave or press ENTER to play again:");
+                    
+                    inputLine = in.readLine(); // Read the client's decision to exit or play again
+                    if ("exit".equalsIgnoreCase(inputLine.trim())) {
+                        return false; // End the game if the player chooses to exit
+                    } else if (inputLine.trim().isEmpty()) {
+                        gameWon = true; // Set flag to exit the inner loop and start a new game session
+                    }
+                } else if (guess < number) {
+                    out.println("Higher");
+                } else {
+                    out.println("Lower");
+                }
             }
+    
+            if (!gameWon) {
+                // If we reach this point without the game being won (e.g., client disconnected),
+                // we exit the method to allow the server to wait for a new connection.
+                return true;
+            }
+            // A new game session will start with a new random number due to the outer loop
         }
-        return true; // Default to continue the game
-    }
+    }    
 }
