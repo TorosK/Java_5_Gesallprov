@@ -3,6 +3,10 @@ import java.net.*;
 import java.util.Random;
 
 public class Guess_Number_Server {
+    // Define constants for the number range at the top for easy management
+    private static final int MIN_NUMBER = 0;
+    private static final int MAX_NUMBER = 10;
+
     public static void main(String[] args) throws IOException {
         int port = 12345; // Server port
         try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -35,52 +39,47 @@ public class Guess_Number_Server {
             }
         }
     }
+
     private static boolean handleClientGuesses(BufferedReader in, PrintWriter out, Random random) throws IOException {
-        int number = random.nextInt(11); // Initialize the number for the first game
-    
-        out.println("New game started. Please input your guessed number from 0 to 10 and press ENTER");
-    
-        while (true) { // Loop for handling multiple game sessions
-            String inputLine = in.readLine(); // Read the client's input
-    
-            if (inputLine == null) break; // Break out of the loop if the connection is lost
-    
+        // Generate a random number within the specified range
+        int number = MIN_NUMBER + random.nextInt(MAX_NUMBER - MIN_NUMBER + 1);
+
+        out.println("New game started. Please input your guessed number from " + MIN_NUMBER + " to " + MAX_NUMBER + " and press ENTER");
+
+        while (true) {
+            String inputLine = in.readLine();
+
+            if (inputLine == null) break;
+
             if ("exit".equalsIgnoreCase(inputLine.trim())) {
-                return false; // End the game if the player chooses to exit
+                return false;
             }
-    
-            // Remove the handling for "new game" here since it's not needed in this context
-    
+
             try {
-                int guess = Integer.parseInt(inputLine); // Parse the guess
-    
+                int guess = Integer.parseInt(inputLine);
+
                 if (guess == number) {
                     String trophyArt = AsciiArtReader.readAsciiArt("ASCII_Art_Trophy.txt");
-                    // Modified to send the winning message followed by instructions without repeating "END OF GAME!"
-                    out.println("Correct!\n" + trophyArt + "\nYou won! \nEnter 'exit' to leave or press ENTER to play again:");
-// Inside the handleClientGuesses method, after sending the winning message
-inputLine = in.readLine(); // Wait for the client's response
+                    out.println("Correct!\n" + trophyArt + "\nYou won! Enter 'exit' to leave or press ENTER to play again:");
+                    inputLine = in.readLine();
 
-if ("exit".equalsIgnoreCase(inputLine.trim())) {
-    return false; // End the session if the client chooses to exit
-} else {
-    // Reset for a new game
-    number = random.nextInt(11);
-    out.println("New game started. Please input your guessed number from 0 to 10 and press ENTER");
-    continue; // Continue to allow the client to make a new guess
-}
-
+                    if ("exit".equalsIgnoreCase(inputLine.trim())) {
+                        return false;
+                    } else {
+                        number = MIN_NUMBER + random.nextInt(MAX_NUMBER - MIN_NUMBER + 1);
+                        out.println("New game started. Please input your guessed number from " + MIN_NUMBER + " to " + MAX_NUMBER + " and press ENTER");
+                        continue;
+                    }
                 } else if (guess < number) {
                     out.println("Higher");
                 } else {
                     out.println("Lower");
                 }
             } catch (NumberFormatException e) {
-                out.println("Invalid input. Please guess a number from 0 to 10.");
+                out.println("Invalid input. Please guess a number from " + MIN_NUMBER + " to " + MAX_NUMBER + ".");
             }
         }
-    
-        return false; // Return false if the loop exits for any reason other than 'exit' command
+
+        return false;
     }
-    
 }
