@@ -56,15 +56,15 @@ public class GuessNumberServer {
                     boolean gameContinue = true;
                     while (gameContinue) {
                         Random random = new Random();
-                        int number = random.nextInt(11); // Generate random number between 0-10
-
+                        int number = random.nextInt(11); // Generate a new random number for each new game
+                    
                         String inputLine;
                         while ((inputLine = in.readLine()) != null) {
                             if ("exit".equalsIgnoreCase(inputLine.trim())) {
                                 gameContinue = false; // Exit the loop if the client wants to end the game
                                 break;
                             }
-
+                    
                             int guess = Integer.parseInt(inputLine);
                             if (guess == number) {
                                 out.println("Correct!\n" +
@@ -83,11 +83,10 @@ public class GuessNumberServer {
                                 
                                 inputLine = in.readLine();
                                 if ("exit".equalsIgnoreCase(inputLine.trim())) {
-                                    gameContinue = false; // Exit the loop if the client wants to end the game
+                                    gameContinue = false; // End the game if the player chooses to exit
                                     break;
-                                } else if (inputLine.trim().isEmpty()) { // Treat an empty input (just pressing ENTER) as a signal to start a new game
-                                    // Implicitly continue to a new game
-                                    break; // Break the inner loop to start a new game
+                                } else if (inputLine.trim().isEmpty()) { // Start a new game if the player presses ENTER
+                                    // No need to do anything here, the loop will continue and a new number will be generated
                                 }
                             } else if (guess < number) {
                                 out.println("Higher");
@@ -95,7 +94,7 @@ public class GuessNumberServer {
                                 out.println("Lower");
                             }
                         }
-                    }
+                    }                          
                 } catch (IOException e) {
                     System.out.println("Exception caught when trying to listen on port " + port + " or listening for a connection");
                     System.out.println(e.getMessage());
