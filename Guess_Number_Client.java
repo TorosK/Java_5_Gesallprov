@@ -5,53 +5,33 @@ public class Guess_Number_Client {
     public static void main(String[] args) throws IOException {
         String hostName = "localhost"; // Server hostname or IP
         int port = 12345; // Server port
-        
+
         try (Socket socket = new Socket(hostName, port);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))) {
-            
-            // Display the welcome message as a single block
+
             String fromServer;
+            // Display server messages
+            // Inside the main method of the Guess_Number_Client class
             while (true) {
                 fromServer = in.readLine();
-                if (fromServer == null) break;
+                if (fromServer == null) break; // Server connection lost
                 System.out.println("Server: " + fromServer);
-                if (fromServer.contains("press ENTER")) break; // Stop after the welcome message
+            
+                if (fromServer.startsWith("New game started") || fromServer.equals("Higher") || fromServer.equals("Lower")) {
+                    System.out.print("Your guess: ");
+                    String userGuess = stdIn.readLine();
+                    out.println(userGuess); // Send the next guess or command to the server
+                } else if (fromServer.contains("END OF GAME!")) {
+                    // Handle end-of-game scenario, waiting for user's decision
+                    String userDecision = stdIn.readLine(); // Read user's decision to play again or exit
+                    out.println(userDecision.isEmpty() ? "new game" : userDecision.trim()); // Send decision to server
+                    if ("exit".equalsIgnoreCase(userDecision.trim())) break; // Exit the client if user decides to
+                }
             }
             
-            while (true) {
-                System.out.print("Your guess: "); // Prompt for the first guess
-                String fromUser = stdIn.readLine();
-                if (fromUser != null) {
-                    out.println(fromUser); // Send the guess to the server
-                    if ("exit".equalsIgnoreCase(fromUser.trim())) break; // Exit if the user types 'exit'
-                }
 
-                // Read the server's response after sending the guess
-                StringBuilder serverResponse = new StringBuilder();
-                while ((fromServer = in.readLine()) != null && !fromServer.isEmpty()) {
-                    serverResponse.append(fromServer).append("\n");
-                    if (fromServer.contains("play again") || fromServer.contains("Higher") || fromServer.contains("Lower")) break;
-                }
-                
-                // Print the server's response
-                System.out.println("Server: " + serverResponse.toString());
-
-                if (serverResponse.toString().contains("play again")) {
-// Client-side: After receiving the win message
-String decision = stdIn.readLine();
-if ("exit".equalsIgnoreCase(decision.trim())) {
-    out.println("exit"); // Inform the server the client is exiting
-    break; // Exit the client loop
-} else {
-    out.println("new game"); // Inform the server to start a new game
-    if (!decision.isEmpty()) {
-        out.println(decision); // Send the first guess for the new game
-    }
-}
-                }
-            }
         }
     }
 }
