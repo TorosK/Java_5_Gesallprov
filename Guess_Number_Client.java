@@ -12,33 +12,37 @@ public class Guess_Number_Client {
              BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))) {
 
             String fromServer;
-            // Display server messages
-            // Inside the main method of the Guess_Number_Client class
+
             while (true) {
                 fromServer = in.readLine();
                 if (fromServer == null) break; // Server connection lost
                 System.out.println("Server: " + fromServer);
-// Inside the client's main loop, after printing the server's message
-if (fromServer.contains("Enter 'exit' to leave or press ENTER to play again:")) {
-    String userResponse = stdIn.readLine(); // Read the user's decision
-    out.println(userResponse.isEmpty() ? "" : userResponse); // Send it back to the server
-    if ("exit".equalsIgnoreCase(userResponse.trim())) {
-        break; // Break the loop if the user wants to exit
-    }
-    // No need for an else block here, as the loop will continue and wait for the server's next message
-}
 
-                
-                
+                if (fromServer.contains("Enter 'exit' to leave or press ENTER to play again:")) {
+                    String userResponse = stdIn.readLine(); // Read the user's decision
+                    out.println(userResponse.isEmpty() ? "" : userResponse); // Send it back to the server
+                    if ("exit".equalsIgnoreCase(userResponse.trim())) {
+                        break; // Break the loop if the user wants to exit
+                    }
+                }
 
-                if (fromServer.startsWith("New game started") || fromServer.equals("Higher") || fromServer.equals("Lower")) {
-                    System.out.print("Your guess: ");
-                    String userGuess = stdIn.readLine();
-                    out.println(userGuess); // Send the next guess or command to the server
-                } 
+                // Check for prompts where a guess is expected
+                if (fromServer.startsWith("New game started") || fromServer.equals("Higher") || fromServer.equals("Lower") || fromServer.startsWith("Invalid input")) {
+                    boolean validGuess = false;
+                    while (!validGuess) {
+                        System.out.print("Your guess: ");
+                        String userGuess = stdIn.readLine();
+
+                        // Check if the user input is a number or the exit command
+                        if (userGuess.matches("\\d+") || "exit".equalsIgnoreCase(userGuess.trim())) {
+                            out.println(userGuess); // Send the guess or command to the server
+                            validGuess = true; // Exit the loop after a valid guess
+                        } else {
+                            System.out.println("Invalid input. Please enter a number or 'exit' to leave.");
+                        }
+                    }
+                }
             }
-            
-
         }
     }
 }
