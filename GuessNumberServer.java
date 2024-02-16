@@ -14,7 +14,31 @@ public class GuessNumberServer {
                      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
                     
                     System.out.println("Client connected");
-                    out.println("Welcome to the Guess the Number game!\nPlease input your guessed number from 0 to 10 and press ENTER.");
+                    // Server-side: Initial welcome message with ASCII art
+String welcomeMessage = "Welcome to the Guess the Number game!\n" +
+"\n" +
+"            ________\n" + 
+"        _jgN########Ngg_\n" + 
+"      _N##N@@\"\"  \"\"9NN##Np_\n" + 
+"     d###P             N####p\n" + 
+"     \"^^\"               T####\n" + 
+"                        d###P\n" + 
+"                     _g###@F\n" + 
+"                  _gN##@P\n" + 
+"                gN###F\"\n" + 
+"               d###F\n" + 
+"              0###F\n" + 
+"              0###F\n" + 
+"              0###F\n" + 
+"              \"NN@'\n" +
+"\n" + 
+"               ___\n" + 
+"              q###r\n" + 
+"               \"\"\n" + 
+"\n" +
+"Please input your guessed number from 0 to 10 and press ENTER.";
+
+out.println(welcomeMessage);
                     
                     Random random = new Random();
                     int number = random.nextInt(11); // Generate random number between 0-10
