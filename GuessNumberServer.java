@@ -8,20 +8,28 @@ public class GuessNumberServer {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server is listening on port " + port);
             System.out.println("Server IP: " + InetAddress.getLocalHost().getHostAddress());
+            System.out.println("Server Host: " + serverSocket.getInetAddress().getHostName()); // Display the server host information
 
             while (true) { // Server loop to allow multiple games
-                try (Socket clientSocket = serverSocket.accept();
-                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                Socket clientSocket = serverSocket.accept(); // Accept the client connection here
 
-                    System.out.println("Client connected from " + clientSocket.getRemoteSocketAddress());
+                // Display detailed client connection information
+                InetSocketAddress remoteSocketAddress = (InetSocketAddress) clientSocket.getRemoteSocketAddress();
+                String clientIP = remoteSocketAddress.getAddress().getHostAddress();
+                int clientPort = remoteSocketAddress.getPort();
+                System.out.println("Client connected - IP: " + clientIP + ", Port: " + clientPort);
+
+                try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
 
                     // Include server and connection details in the welcome message
                     String welcomeMessage = "\nServer Host: " + serverSocket.getInetAddress().getHostName() + "\n" +
                             "Server IP: " + InetAddress.getLocalHost().getHostAddress() + "\n" +
                             "Server Port: " + serverSocket.getLocalPort() + "\n" +
-                            "Connected to: " + clientSocket.getLocalAddress().getHostAddress() + "\n\n" +
+                            "Connected from IP: " + clientSocket.getInetAddress().getHostAddress() + "\n" + // get client IP
+                            "Connected from Port: " + clientSocket.getPort() + "\n\n" + // get client port
                             "Welcome to the 'Guess the Number' Game!\n\n" +
+                             // ASCII Art
                             "            ________\n" +
                             "        _jgN########Ngg_\n" +
                             "      _N##N@@\"\"  \"\"9NN##Np_\n" +
@@ -88,8 +96,11 @@ public class GuessNumberServer {
                             }
                         }
                     }
+                } catch (IOException e) {
+                    System.out.println("Exception caught when trying to listen on port " + port + " or listening for a connection");
+                    System.out.println(e.getMessage());
                 }
-                System.out.println("Client disconnected. Waiting for a new connection...");
+                System.out.println("Client disconnected. Waiting for a new connection..."); // This line should be here, inside the while loop but outside the try-catch block
             }
         }
     }
