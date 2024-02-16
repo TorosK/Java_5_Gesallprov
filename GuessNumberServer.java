@@ -6,16 +6,24 @@ public class GuessNumberServer {
     public static void main(String[] args) throws IOException {
         int port = 12345; // Server port
         try (ServerSocket serverSocket = new ServerSocket(port)) {
+            // Display server details
             System.out.println("Server is listening on port " + port);
-            
+            System.out.println("Server IP: " + InetAddress.getLocalHost().getHostAddress());
+
             while (true) { // Server loop to allow multiple games
                 try (Socket clientSocket = serverSocket.accept();
                      PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-                    
-                    System.out.println("Client connected");
-                    // Server-side: Initial welcome message with ASCII art
-String welcomeMessage = "Welcome to the Guess the Number game!\n" +
+
+                    // Display client connection details
+                    System.out.println("Client connected from " + clientSocket.getRemoteSocketAddress());
+
+                    // Include server and connection details in the welcome message
+                    String welcomeMessage = "\nWelcome to the Guess the Number game!\n\n" +
+                            "Server Host: " + serverSocket.getInetAddress().getHostName() + "\n" +
+                            "Server IP: " + InetAddress.getLocalHost().getHostAddress() + "\n" +
+                            "Server Port: " + serverSocket.getLocalPort() + "\n" +
+                            "Connected to: " + clientSocket.getLocalAddress().getHostAddress() + "\n\n" +
 "\n" +
 "            ________\n" + 
 "        _jgN########Ngg_\n" + 
