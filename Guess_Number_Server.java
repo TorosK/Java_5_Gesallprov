@@ -25,6 +25,8 @@ public class Guess_Number_Server {
         // Creating a server socket to listen for client connections on the specified port.
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server is listening on port " + port);
+            System.out.println("Server IP: " + InetAddress.getLocalHost().getHostAddress());
+            System.out.println("Server Host: " + serverSocket.getInetAddress().getHostName());
 
             // Server loop to continuously accept client connections and start new game sessions.
             while (true) {
